@@ -8,6 +8,12 @@ module.exports = (sequelize, Sequelize) => {
         },
         description: {
             type: Sequelize.STRING
+        },
+        createdAt: {
+            type: Sequelize.STRING
+        },
+        progress: {
+            type: Sequelize.INTEGER
         }
     },
         {

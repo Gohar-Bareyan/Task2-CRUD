@@ -1,5 +1,5 @@
 import { ResponseGenerator } from './Interfaces/index';
-import { GET_TO_DO_LIST_REQUEST, SET_TO_DO_LIST_REQUEST, DELETE_TO_DO_LIST, SORT_BY_DATE, SORT_ALPHABETICALLY, GET_LIST_INFO_REQUEST } from './ToDoList/Type';
+import { GET_TO_DO_LIST_REQUEST, SET_TO_DO_LIST_REQUEST, DELETE_TO_DO_LIST, SORT_BY_DATE, SORT_ALPHABETICALLY } from './ToDoList/Type';
 import { call, put, takeEvery } from "redux-saga/effects"
 import axios from "axios"
 import { setToDoListSuccess } from './ToDoList/Action';
@@ -18,7 +18,6 @@ function* watcherSaga() {
 	yield takeEvery(DELETE_TO_DO_LIST, deleteList)
 	yield takeEvery(SORT_BY_DATE, getSortedByDateList)
 	yield takeEvery(SORT_ALPHABETICALLY, getSortedAlphabeticallyList)
-	yield takeEvery(GET_LIST_INFO_REQUEST, getListInfo)
 }
 
 function* setToDoListRequest({ payload }: any) {
@@ -64,18 +63,6 @@ function* getSortedAlphabeticallyList() {
 	try {
 		const result: ResponseGenerator = yield Axios.get("http://localhost:5000/get-sorted-alphabetically-list")
 		yield put(setToDoListSuccess(result.data))
-	} catch (e) {
-		console.error(e);
-
-	}
-}
-
-function* getListInfo({ payload }: any) {
-	console.log(payload);
-
-	try {
-		const result: ResponseGenerator = yield Axios.get("http://localhost:5000/get-list-info", { data: payload })
-
 	} catch (e) {
 		console.error(e);
 

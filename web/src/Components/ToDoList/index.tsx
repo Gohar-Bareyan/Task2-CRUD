@@ -1,23 +1,21 @@
 import React, { useEffect, useRef, useState } from 'react';
 import {
     Button, TextField, Autocomplete, ButtonGroup, ClickAwayListener, Grow, Paper, Popper,
-    MenuItem, MenuList, Box, Modal, MobileStepper, Typography
+    MenuItem, MenuList, Box, Modal, MobileStepper
 } from '@mui/material';
-import { useTheme } from '@mui/material/styles';
-import KeyboardArrowLeft from '@mui/icons-material/KeyboardArrowLeft';
-import KeyboardArrowRight from '@mui/icons-material/KeyboardArrowRight';
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 import { useForm, SubmitHandler } from 'react-hook-form';
 import * as Yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useDispatch } from 'react-redux';
+import { useSelector } from 'react-redux';
+import { Link } from "react-router-dom"
 
 import { ReactComponent as AdditionIcon } from "../../Images/addition.svg"
-import { ReactComponent as BackIcon } from "../../Images/back.svg"
 import styles from "./index.module.scss"
-import { deleteToDoList, getListInfoRequest, getToDoListRequest, setToDoListRequest, sortAlphabetically, sortByDate, updateToDoList } from '../../Store/ToDoList/Action';
-import { useSelector } from 'react-redux';
+import { deleteToDoList, getToDoListRequest, setToDoListRequest, sortAlphabetically, sortByDate } from '../../Store/ToDoList/Action';
 import { RootState } from '../../Store/Root';
+import Header from '../Header';
 
 const options = ['Sort by date', 'Sort alphabetically'];
 
@@ -66,7 +64,6 @@ export const ToDoList = () => {
     const anchorRef = useRef<HTMLDivElement>(null);
     const [selectedIndex, setSelectedIndex] = useState(1);
     // console.log(selectedIndex === 0);
-
 
     const handleClick = () => {
         console.info(`You clicked ${options[selectedIndex]}`);
@@ -132,33 +129,13 @@ export const ToDoList = () => {
         })
     }
 
-
-    // List Info
-    const [show, setShow] = useState(true);
-    const showInfo = (id: number) => {
-        setShow(!show);
-        dispatch(getListInfoRequest(id))
-    }
-    const goBack = () => {
-        setShow(show)
-    }
-
-    // Percent
     const [activeStep, setActiveStep] = useState(0);
 
-    const handleNext = () => {
-        setActiveStep((prevActiveStep) => prevActiveStep + 1);
-    };
 
-    const handleBack = () => {
-        setActiveStep((prevActiveStep) => prevActiveStep - 1);
-    };
     return (
         <>
             <div className={styles.main}>
-                <div className={styles.header}>
-                    <h1>To Do List</h1>
-                </div>
+                <Header title={"To Do List"} />
                 <div className={styles.menu}>
                     <Button className={styles.add_button} onClick={handleToggleModal}><AdditionIcon className={styles.add_icon} />Add new task</Button>
                     <Autocomplete
@@ -169,8 +146,6 @@ export const ToDoList = () => {
                         sx={{ width: 200 }}
                         renderInput={(params) => <TextField className={styles.autocomplete_textfield} {...params} placeholder="Search ..." variant="outlined" />}
                     />
-
-
 
                     <Modal
                         open={toggleModal}
@@ -255,84 +230,45 @@ export const ToDoList = () => {
                 </div>
 
 
-                {show ? (
-                    <div className={styles.table_div} id="table_div">
-                        <table>
-                            <thead>
-                                <tr>
-                                    <th className={styles.title_tr}>Title</th>
-                                    <th className={styles.progress_tr}>Progress</th>
-                                    <th className={styles.actions_tr}>Actions</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {toDoListArr && toDoListArr?.map((list: any) => {
-                                    return (
-                                        <tr key={list.id} >
-                                            <td onClick={() => showInfo(list.id)} className={styles.title}>{list.title}</td>
-                                            <td onClick={() => showInfo(list.id)}>
-                                                 <MobileStepper
-                                        className={styles.stepper}
-                                        variant="progress"
-                                        steps={6}
-                                        position="static"
-                                        activeStep={activeStep}
-                                        sx={{ maxWidth: 500, flexGrow: 1 }}
-                                        nextButton={""}
-                                        backButton={""}
-                                    />
-                                            </td>
-                                            <td>
-                                                <Button className={styles.update_button} onClick={handleToggleModal}>Update</Button>
-                                                <Button className={styles.delete_button} onClick={() => deleteList(list.id)}>Delete</Button>
-                                            </td>
-                                        </tr>
-                                    )
-                                })}
-                            </tbody>
-                        </table>
-                    </div>
-                ) : (
-                    <div className={styles.to_do_info_main_div}>
-                        <div className={styles.to_do_info_title}>
-                            <h3>title</h3>
-                        </div>
-                        <div className={styles.to_do_info}>
-                            <div className={styles.description_div}>
-                                <p>Description</p>
-                            </div>
-                            <div className={styles.info_actions}>
-                                <div className={styles.percentage_div}>
-                                    <MobileStepper
-                                        className={styles.stepper}
-                                        variant="progress"
-                                        steps={6}
-                                        position="static"
-                                        activeStep={activeStep}
-                                        sx={{ maxWidth: 500, flexGrow: 1 }}
-                                        nextButton={
-                                            <Button size="small" onClick={handleNext} disabled={activeStep === 5} className={styles.plus_button}>+</Button>
-                                        }
-                                        backButton={
-                                            <Button size="small" onClick={handleBack} disabled={activeStep === 0} className={styles.minus_button}>-</Button>
-                                        }
-                                    />
-                                </div>
-                                <div className={styles.deadline_div}>
-                                    <p>Deadline  201524545454</p>
-                                </div>
-                                <div className={styles.createdAt_div}>
-                                    <p>Created At  201524545454</p>
-                                </div>
-                                <div className={styles.info_buttons}>
-                                    <Button className={styles.info_delete_button}>Delete</Button>
-                                    <Button className={styles.info_update_button}>Update</Button>
-                                </div>
-                                <Button onClick={() => goBack()} className={styles.go_back_button}><BackIcon className={styles.back_icon} />Go Back</Button>
-                            </div>
-                        </div>
-                    </div>
-                )}
+
+                <div className={styles.table_div} id="table_div">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th className={styles.title_tr}>Title</th>
+                                <th className={styles.progress_tr}>Progress</th>
+                                <th className={styles.actions_tr}>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {toDoListArr?.map((list: any) => {
+                                return (
+                                    <tr key={list.id} >
+                                        <td className={styles.title}><Link to={`/to-do-info/${list.id}`}>{list.title}</Link></td>
+                                        <td><Link to={`/to-do-info/${list.id}`}>
+                                            <MobileStepper
+                                                className={styles.stepper}
+                                                variant="progress"
+                                                steps={6}
+                                                position="static"
+                                                activeStep={activeStep}
+                                                sx={{ maxWidth: 500, flexGrow: 1 }}
+                                                nextButton={""}
+                                                backButton={""}
+                                            />
+                                        </Link>
+                                        </td>
+                                        <td>
+                                            <Button className={styles.update_button} onClick={handleToggleModal}>Update</Button>
+                                            <Button className={styles.delete_button} onClick={() => deleteList(list.id)}>Delete</Button>
+                                        </td>
+                                    </tr>
+                                )
+                            })}
+                        </tbody>
+                    </table>
+                </div>
+
 
 
 

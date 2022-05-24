@@ -1,11 +1,9 @@
 import {
     SET_TO_DO_LIST_REQUEST, SET_TO_DO_LIST_SUCCESS, SET_TO_DO_LIST_ERROR, GET_TO_DO_LIST_REQUEST,
-    DELETE_TO_DO_LIST, UPDATE_TO_DO_LIST, SORT_BY_DATE, SORT_ALPHABETICALLY, SET_LIST_INFO_SUCCESS,
-    GET_LIST_INFO_REQUEST
+    DELETE_TO_DO_LIST, UPDATE_TO_DO_LIST, SORT_BY_DATE, SORT_ALPHABETICALLY
 } from './Type';
 
 export const setToDoListRequest = (data: object) => {
-    // console.log(data);
     return {
         type: SET_TO_DO_LIST_REQUEST,
         payload: data
@@ -57,22 +55,6 @@ export const sortByDate: any = () => {
 export const sortAlphabetically = () => {
     return {
         type: SORT_ALPHABETICALLY
-    }
-}
-
-export const setListInfoSuccess = (data: any) => {
-    return {
-        type: SET_LIST_INFO_SUCCESS,
-        payload: data
-    }
-}
-
-export const getListInfoRequest = (data: number) => {
-    // console.log(data);
-    
-    return {
-        type: GET_LIST_INFO_REQUEST,
-        payload: data
     }
 }
 

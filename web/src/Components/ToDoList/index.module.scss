@@ -3,19 +3,6 @@
     background-color: #0e151b;
     min-height: 800px;
 
-    .header {
-        background-color: #2e323e;
-        height: 60px;
-        display: flex;
-        align-items: center;
-
-        h1 {
-            color: #c1c4cd;
-            font-size: 23px;
-            margin-left: 30px;
-        }
-    }
-
     .menu {
         height: 80px;
         display: flex;
@@ -156,6 +143,15 @@
 
                 .title {
                     padding-left: 15px;
+
+                    a {
+                        color: white;
+                        text-decoration: none;
+                        width: 100%;
+                        display: flex;
+                        align-items: center;
+                        height: 60px;
+                    }
                 }
 
                 .update_button,
@@ -184,124 +180,3 @@
     }
 }
 
-.to_do_info_main_div {
-    .to_do_info_title {
-        background-color: #404654;
-        width: 95%;
-        margin-left: 30px;
-
-        h3 {
-            color: white;
-            padding: 10px;
-        }
-    }
-
-    .to_do_info {
-        display: flex;
-
-        .description_div {
-            background-color: #404654;
-            width: 47%;
-            height: 350px;
-            margin-left: 30px;
-            margin-top: 0px !important;
-
-            p {
-                color: white;
-                font-size: 18px;
-                padding: 10px;
-            }
-        }
-
-        .info_actions {
-            background-color: #404654;
-            width: 47%;
-            height: 350px;
-            margin-left: 14px;
-            margin-top: 0px !important;
-
-            .percentage_div {
-                height: 60px;
-
-                .stepper {
-                    background-color: transparent;
-                    margin: auto;
-                    margin-top: 20px;
-
-                    span {
-                        height: 15px;
-                        border-radius: 7px;
-                        // width: 50%;
-                    }
-                }
-
-                .plus_button,
-                .minus_button {
-                    background-color: #dc3545;
-                    font-size: 25px;
-                    color: white;
-                    width: 90px;
-                    height: 38px;
-                }
-
-                .plus_button {
-                    background-color: #198754;
-                }
-            }
-
-            .deadline_div,
-            .createdAt_div {
-                padding-top: 10px;
-                width: 600px;
-                margin-left: 15px;
-                border-bottom: 1px solid white;
-
-                p {
-                    color: white;
-                    width: 130px;
-                }
-            }
-
-            .createdAt_div {
-                border-bottom: none;
-            }
-
-            .info_buttons {
-                display: flex;
-
-                .info_delete_button,
-                .info_update_button {
-                    width: 47%;
-                    height: 40px;
-                    background-color: #dc3545;
-                    color: white;
-                    text-transform: capitalize;
-                    font-size: 16px;
-                    margin-left: 15px;
-                    margin-top: 5px;
-                }
-
-                .info_update_button {
-                    background-color: #198754;
-                    margin-left: 5px;
-                }
-            }
-
-            .go_back_button {
-                background-color: #198754;
-                width: 95%;
-                margin-left: 15px;
-                margin-top: 10px;
-                color: white;
-                text-transform: capitalize;
-                font-size: 16px;
-
-                .back_icon {
-                    fill: white;
-                    width: 16px;
-                    margin-right: 10px;
-                }
-            }
-        }
-    }
-}

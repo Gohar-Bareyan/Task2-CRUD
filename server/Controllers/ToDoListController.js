@@ -1,12 +1,15 @@
 const { ToDoList } = require("../models");
-
+const moment = require ("moment")
 
 class ToDoListController {
     static async addToDoList(req, res) {
+        const createdDay = moment().format("YYYY-MM-DD");
+
         const newToDoList = await ToDoList.create({
             deadline: req.body.data.deadline,
             title: req.body.data.title,
-            description: req.body.data.description
+            description: req.body.data.description,
+            createdAt: createdDay
         })
         res.send(newToDoList)
     }
@@ -31,14 +34,6 @@ class ToDoListController {
     static async getSortedAlphabeticallyList(req, res) {
         const sortedAlphabeticallyList = await ToDoList.findAll({ order: [['title', 'ASC']] })
         res.send(sortedAlphabeticallyList)
-    }
-
-    static async getListInfo(req, res) {
-        // console.log(req.body.data);
-    //     const listInfo = await ToDoList.findAll({
-    //         where: { id: req.body.data.id }
-    //     })
-    //     console.log(listInfo);
     }
 }
 

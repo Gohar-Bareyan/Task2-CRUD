@@ -1,5 +1,6 @@
 export const toDoListState = {
     toDoList: [],
-    loading:false,
+    singleList: {},
+    loading: false,
     error: null
 }

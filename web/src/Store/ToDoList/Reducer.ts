@@ -1,4 +1,4 @@
-import { SET_TO_DO_LIST_REQUEST, SET_TO_DO_LIST_SUCCESS, SET_TO_DO_LIST_ERROR, GET_TO_DO_LIST_REQUEST } from './Type';
+import { SET_TO_DO_LIST_REQUEST, SET_TO_DO_LIST_SUCCESS, SET_TO_DO_LIST_ERROR, GET_TO_DO_LIST_REQUEST, DELETE_TO_DO_LIST, UPDATE_TO_DO_LIST, SORT_BY_DATE, SORT_ALPHABETICALLY, SET_LIST_INFO_SUCCESS, GET_LIST_INFO_REQUEST } from './Type';
 import { toDoListState } from './State';
 export const toDoListReducer = (state = toDoListState, action: any) => {
     switch (action.type) {
@@ -20,6 +20,37 @@ export const toDoListReducer = (state = toDoListState, action: any) => {
                 loading: false
             }
         case GET_TO_DO_LIST_REQUEST:
+            return {
+                ...state,
+                loading: true
+            }
+        case DELETE_TO_DO_LIST:
+            return {
+                ...state,
+                loading: true
+            }
+        case UPDATE_TO_DO_LIST:
+            return {
+                ...state,
+                loading: true
+            }
+        case SORT_BY_DATE:
+            return {
+                ...state,
+                loading: true
+            }
+        case SORT_ALPHABETICALLY:
+            return {
+                ...state,
+                loading: true
+            }
+        case SET_LIST_INFO_SUCCESS:
+            return {
+                ...state,
+                singleList: action.payload,
+                loading: false
+            }
+        case GET_LIST_INFO_REQUEST:
             return {
                 ...state,
                 loading: true

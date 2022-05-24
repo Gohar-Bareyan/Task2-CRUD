@@ -1,0 +1,175 @@
+.main {
+    width: 100%;
+    background-color: #0e151b;
+    min-height: 800px;
+
+    .header {
+        background-color: #2e323e;
+        height: 60px;
+        display: flex;
+        align-items: center;
+
+        h1 {
+            color: #c1c4cd;
+            font-size: 23px;
+            margin-left: 30px;
+        }
+    }
+
+    .menu {
+        height: 80px;
+        display: flex;
+        justify-content: flex-start;
+        align-items: center;
+
+        .add_button {
+            width: 155px;
+            background-color: #198754;
+            height: 35px;
+            color: white;
+            text-transform: capitalize;
+            margin-left: 30px;
+
+            .add_icon {
+                fill: white;
+                width: 18px;
+                margin-right: 10px;
+            }
+        }
+
+        .autocomplete {
+            background-color: white;
+            border-radius: 8px;
+            margin-left: 15px;
+            height: 35px;
+
+            .autocomplete_textfield {
+                input {
+                    height: 4px;
+                    outline: none;
+                    border: none;
+                    border-radius: 8px;
+                }
+            }
+        }
+
+        .sort_button_group {
+            background-color: white;
+            border-radius: 8px;
+            margin-left: 15px;
+
+            .sort_button {
+                color: #3e454d;
+                text-transform: capitalize;
+            }
+        }
+
+        .modal {
+            background-color: #c1c4cd !important;
+            display: grid;
+        }
+    }
+}
+
+.add_task_div,
+.description_div {
+    margin-top: 20px !important;
+}
+
+.description_div {
+    textarea {
+        resize: none;
+    }
+}
+
+.close_create_buttons {
+    display: flex;
+    justify-content: end;
+    margin-left: 10px;
+    margin-top: 10px;
+
+    .add_task_close_button,
+    .add_task_create_button {
+        background-color: #dc3545 !important;
+        color: white !important;
+        text-transform: capitalize !important;
+        font-size: 15px !important;
+        width: 80px !important;
+        border-radius: 6px;
+    }
+
+    .add_task_create_button {
+        background-color: #198754 !important;
+        margin-left: 12px;
+    }
+}
+
+.table_div {
+    width: 96%;
+    margin-left: 30px;
+    display: inline-flex;
+
+    table {
+        width: 100%;
+        border-spacing: 0 10px !important;
+        border-collapse: separate;
+
+        thead {
+            background-color: #2e323e;
+            height: 60px;
+            color: #c1c4cd;
+
+            tr {
+                .title_tr {
+                    padding-left: 15px;
+                }
+
+                .progress_tr {
+                    padding-right: 375px;
+                }
+
+                .actions_tr {
+                    padding-right: 150px;
+                }
+            }
+        }
+
+        tbody {
+            tr {
+                cursor: pointer;
+                color: white;
+                height: 60px;
+
+                div {
+                    display: flex;
+                }
+
+                .title {
+                    padding-left: 15px;
+                }
+
+                .update_button,
+                .delete_button {
+                    background-color: #198754;
+                    width: 90px;
+                    height: 30px;
+                    color: white;
+                    text-transform: capitalize;
+                }
+
+                .delete_button {
+                    background-color: #dc3545;
+                    margin-left: 15px;
+                }
+                td {
+                    width: 100%;
+                    background-color: #2e323e;
+
+                    &:hover {
+                        background-color: #21232c;
+                    }
+                }
+            }
+        }
+    }
+}

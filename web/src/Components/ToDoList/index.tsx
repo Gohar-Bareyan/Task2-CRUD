@@ -17,6 +17,8 @@ import styles from "./index.module.scss"
 import { deleteToDoList, getToDoListRequest, setToDoListRequest, sortAlphabetically, sortByDate, updateToDoList } from '../../Store/ToDoList/Action';
 import { RootState } from '../../Store/Root';
 import Header from '../Header';
+import ModalForm from '../ModalForm';
+
 
 function LinearProgressWithLabel(props: LinearProgressProps & { value: number }) {
     return (
@@ -57,19 +59,6 @@ type Inputs = {
 };
 
 export const ToDoList = () => {
-    // yup for add new task
-
-    const validationSchema = Yup.object().shape({
-        deadline: Yup.string()
-            .required('Deadline must be specified'),
-        title: Yup.string()
-            .required('Title is required'),
-        description: Yup.string()
-            .required('Description is required'),
-    });
-
-   
-
     const { toDoList } = useSelector((state: RootState) => state.toDoList)
 
     const dispatch = useDispatch()
@@ -115,29 +104,14 @@ export const ToDoList = () => {
         setOpen(false);
     };
 
-    // Modal
-    const [toggleModal, setToggleModal] = useState(false);
-    const handleToggleModal = () => setToggleModal(!toggleModal);
+    // Modals
+    const [toggleCreateModal, setToggleCreateModal] = useState(false);
+    const handleToggleCreateModal = () => setToggleCreateModal(!toggleCreateModal);
 
-    const [openUpdate, setOpenUpdate] = useState(false);
-    const handleOpenUpdate = (id:number) => {
-        // console.log(id);
-        setOpenUpdate(true)
-        
-    };
-    const handleCloseUpdate = () => setOpenUpdate(false);
+    const [toggleUpdateModal, setToggleUpdateModal] = useState(false);
+    const handleToggleUpdateModal = () => setToggleUpdateModal(!toggleUpdateModal);
 
-    const { register, reset, handleSubmit, formState: { errors } } = useForm<Inputs>({ resolver: yupResolver(validationSchema) });
-    const onSubmit: SubmitHandler<Inputs> = (data) => {
-        dispatch(setToDoListRequest({ data, toDoList }))
-        reset()
-    }
-
-    const onUpdate: SubmitHandler<Inputs> = (data, listId) => {
-        console.log(listId);
-        dispatch(updateToDoList(data, listId))
-    }
-
+    const [updatableData, setUpdateableData] = useState({})
     const deleteList = (id: number) => {
         dispatch(deleteToDoList(id, toDoList))
     }
@@ -161,9 +135,6 @@ export const ToDoList = () => {
         })
     }
 
-    // Progress
-    const [progress, setProgress] = React.useState(0);
-
     return (
         <>
             <div className={styles.main}>
@@ -171,7 +142,7 @@ export const ToDoList = () => {
                 <Header title={"To Do List"} />
 
                 <div className={styles.menu}>
-                    <Button className={styles.add_button} onClick={handleToggleModal}><AdditionIcon className={styles.add_icon} />Add new task</Button>
+                    <Button className={styles.add_button} onClick={handleToggleCreateModal}><AdditionIcon className={styles.add_icon} />Add new task</Button>
                     <Autocomplete
                         onInputChange={onInputChange}
                         disablePortal
@@ -181,38 +152,7 @@ export const ToDoList = () => {
                         renderInput={(params) => <TextField className={styles.autocomplete_textfield} {...params} placeholder="Search ..." variant="outlined" />}
                     />
 
-                    <Modal
-                        open={toggleModal}
-                        onClose={handleToggleModal}
-                        aria-labelledby="modal-modal-title"
-                        aria-describedby="modal-modal-description"
-                    >
-                        <Box sx={style} className={styles.modal}>
-                            <form onSubmit={handleSubmit(onSubmit)}>
-                                <div className={styles.deadline_div}>
-                                    <label htmlFor='deadline'>Deadline</label>
-                                    <input type="date" id="deadline" className='form-control mt-2' {...register('deadline', { required: true })} />
-                                    {errors.deadline && <p className='text-danger'>Deadline must be specified</p>}
-                                </div>
-                                <div className={styles.add_task_div}>
-                                    <label htmlFor='title'>Title</label>
-                                    <input placeholder="Type your title" type="text" id="title" className='form-control mt-2' {...register('title', { required: true })} />
-                                    {errors.title && <p className='text-danger'>Title is required.</p>}
-                                </div>
-                                <div className={styles.description_div}>
-                                    <label htmlFor='description'>Description</label>
-                                    <textarea placeholder="Type your description" id="description" className='form-control mt-2' {...register('description', { required: true })} />
-                                    {errors.description && <p className='text-danger'>Description is required.</p>}
-                                </div>
-                                <span>_________________________________________________________________________________</span>
-                                <div className={styles.close_create_buttons}>
-                                    <Button className={styles.add_task_close_button} onClick={handleToggleModal}>Close</Button>
-                                    <Button className={styles.add_task_create_button} type="submit">Create</Button>
-                                </div>
-                            </form>
-                        </Box>
-                    </Modal>
-
+                    <ModalForm type="create" toggleModal={toggleCreateModal} handleToggleModal={handleToggleCreateModal}/>
 
                     <ButtonGroup ref={anchorRef} aria-label="split button" className={styles.sort_button_group}>
                         <Button onClick={handleClick} className={styles.sort_button}>{options[selectedIndex]}</Button>
@@ -263,8 +203,6 @@ export const ToDoList = () => {
                     </Popper>
                 </div>
 
-
-
                 <div className={styles.table_div} id="table_div">
                     <table>
                         <thead>
@@ -286,7 +224,10 @@ export const ToDoList = () => {
                                         </Link>
                                         </td>
                                         <td>
-                                            <Button className={styles.update_button} onClick={() => handleOpenUpdate(list.id)}>Update</Button>
+                                            <Button className={styles.update_button} onClick={() => {
+                                                handleToggleUpdateModal();
+                                                setUpdateableData({...list})
+                                            }}>Update</Button>
                                             <Button className={styles.delete_button} onClick={() => deleteList(list.id)}>Delete</Button>
                                         </td>
                                     </tr>
@@ -296,43 +237,8 @@ export const ToDoList = () => {
                     </table>
                 </div>
 
+                <ModalForm type="update" toggleModal={toggleUpdateModal} handleToggleModal={handleToggleUpdateModal} updatableData={updatableData} />
 
-                {toDoListArr?.map((list: any) => {
-                    return (
-                        <Modal
-                        key={list.id}
-                            open={openUpdate}
-                            onClose={handleCloseUpdate}
-                            aria-labelledby="modal-modal-title"
-                            aria-describedby="modal-modal-description"
-                        >
-                            <Box  sx={style} className={styles.modal}>
-                                <form onSubmit={handleSubmit(data => onUpdate(data, list.id))}>
-                                    <div className={styles.deadline_div}>
-                                        <label htmlFor='deadline'>Deadline</label>
-                                        <input type="date" id="deadline" className='form-control mt-2' {...register('deadline', { required: true })} />
-                                        {errors.deadline && <p className='text-danger'>Deadline must be specified</p>}
-                                    </div>
-                                    <div className={styles.add_task_div}>
-                                        <label htmlFor='title'>Title</label>
-                                        <input placeholder="Type your title" type="text" id="title" className='form-control mt-2' {...register('title', { required: true })} />
-                                        {errors.title && <p className='text-danger'>Title is required.</p>}
-                                    </div>
-                                    <div className={styles.description_div}>
-                                        <label htmlFor='description'>Description</label>
-                                        <textarea placeholder="Type your description" id="description" className='form-control mt-2' {...register('description', { required: true })} />
-                                        {errors.description && <p className='text-danger'>Description is required.</p>}
-                                    </div>
-                                    <span>_________________________________________________________________________________</span>
-                                    <div className={styles.close_create_buttons}>
-                                        <Button className={styles.add_task_close_button} onClick={handleCloseUpdate}>Close</Button>
-                                        <Button className={styles.add_task_create_button} type='submit'>Update</Button>
-                                    </div>
-                                </form>
-                            </Box>
-                        </Modal>
-                    )
-                })}
             </div>
         </>
     )

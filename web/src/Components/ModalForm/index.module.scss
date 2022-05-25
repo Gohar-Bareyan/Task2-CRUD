@@ -1,0 +1,66 @@
+.modal {
+    background-color: #c1c4cd !important;
+    display: grid;
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+
+
+.add_task_div,
+.description_div {
+    margin-top: 20px !important;
+}
+
+.description_div {
+    textarea {
+        resize: none;
+    }
+}
+
+.close_create_buttons {
+    display: flex;
+    justify-content: end;
+    margin-left: 10px;
+    margin-top: 10px;
+
+    .add_task_close_button,
+    .add_task_create_button {
+        background-color: #dc3545 !important;
+        color: white !important;
+        text-transform: capitalize !important;
+        font-size: 15px !important;
+        width: 80px !important;
+        border-radius: 6px;
+    }
+
+    .add_task_create_button {
+        background-color: #198754 !important;
+        margin-left: 12px;
+    }
+}
+
+// Responsive 768 - 1200
+
+@media only screen and (max-width: 1200px) {
+    .modal {
+        width: 520px !important;
+
+        form {
+            width: 460px;
+        }
+    }
+}
+
+// Responsive 480 - 768
+
+@media only screen and (max-width: 768px) {
+    .modal {
+        height: 100vh !important;
+        width: 100vw !important;
+        display: flex;
+
+        form {
+            width: 100%;
+        }
+    }
+}

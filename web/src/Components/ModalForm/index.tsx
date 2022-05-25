@@ -1,12 +1,14 @@
 import { Button, Box, Modal } from '@mui/material';
-import { useState } from 'react';
-import * as Yup from 'yup';
+import { useEffect, useState } from 'react';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useForm, SubmitHandler } from 'react-hook-form';
 
 import styles from "./index.module.scss"
 import { useDispatch } from 'react-redux';
-import { setToDoListRequest } from '../../Store/ToDoList/Action';
+import { setToDoListRequest, updateToDoList } from '../../Store/ToDoList/Action';
+import { useSelector } from 'react-redux';
+import { RootState } from '../../Store/Root';
+import { todoFormSchema } from '../../Validations/Schemas';
 
 const style = {
     position: 'absolute' as 'absolute',
@@ -28,28 +30,51 @@ type Inputs = {
     description: string,
 };
 
-const ModalComponent = () => {
-    const validationSchema = Yup.object().shape({
-        deadline: Yup.string()
-            .required('Deadline must be specified'),
-        title: Yup.string()
-            .required('Title is required'),
-        description: Yup.string()
-            .required('Description is required'),
-    });
+interface Props {
+    type: string,
+    toggleModal: boolean,
+    handleToggleModal: Function,
+    updatableData?: any
+}
 
+const ModalForm = (props: Props) => {
+    const { toDoList } = useSelector((state: RootState) => state.toDoList)
     const dispatch = useDispatch()
 
-    const [toggleModal, setToggleModal] = useState(false);
-    const handleToggleModal = () => setToggleModal(!toggleModal);
-    const { register, reset, handleSubmit, formState: { errors } } = useForm<Inputs>({ resolver: yupResolver(validationSchema) });
-    const onSubmit: SubmitHandler<Inputs> = () => {
+    const { register, setValue, reset, handleSubmit, formState: { errors } } = useForm<Inputs>({ resolver: yupResolver(todoFormSchema) });
+    const onSubmit: SubmitHandler<Inputs> = (data, id) => {
+        if (props.type === 'create') {
+            dispatch(setToDoListRequest({ data, toDoList }))
+        } else if (props.type === 'update') {
+            const { updatableData: {id} } = props;
+            dispatch(updateToDoList({data, id}))
+        }
         reset()
     }
+
+
+    const renderActionButton = () => {
+        if (props.type === 'create') {
+            return <Button className={styles.add_task_create_button} type="submit">Create</Button>
+        } else if (props.type === 'update') {
+            return <Button className={styles.add_task_create_button} type="submit">Update</Button>
+        }
+    }
+
+    useEffect(() => {
+        const { updatableData, type} = props;
+
+        if (updatableData?.hasOwnProperty('id') && type === 'update') {
+            setValue("deadline", updatableData.deadline);
+            setValue("title", updatableData.title);
+            setValue("description", updatableData.description);
+        }
+    }, [props.updatableData]);
+
     return (
         <Modal
-            open={toggleModal}
-            onClose={handleToggleModal}
+            open={props.toggleModal}
+            onClose={() => props.handleToggleModal()}
             aria-labelledby="modal-modal-title"
             aria-describedby="modal-modal-description"
         >
@@ -72,8 +97,8 @@ const ModalComponent = () => {
                     </div>
                     <span>_________________________________________________________________________________</span>
                     <div className={styles.close_create_buttons}>
-                        <Button className={styles.add_task_close_button} onClick={handleToggleModal}>Close</Button>
-                        <Button className={styles.add_task_create_button} type="submit">Create</Button>
+                        <Button className={styles.add_task_close_button} onClick={() => props.handleToggleModal()}>Close</Button>
+                        {renderActionButton()}
                     </div>
                 </form>
             </Box>
@@ -82,4 +107,4 @@ const ModalComponent = () => {
     )
 }
 
-export default ModalComponent
+export default ModalForm

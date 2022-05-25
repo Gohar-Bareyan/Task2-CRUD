@@ -9,3 +9,6 @@ export const UPDATE_TO_DO_LIST: string = " UPDATE_TO_DO_LIST"
 
 export const SORT_BY_DATE: string = "SORT_BY_DATE"
 export const SORT_ALPHABETICALLY: string = "SORT_ALPHABETICALLY"
+
+export const SET_PROGRESS_REQUEST:string = "SET_PROGRESS_REQUEST"
+export const GET_PROGRESS_REQUEST: string = "GET_PROGRESS_REQUEST"

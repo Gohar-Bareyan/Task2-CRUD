@@ -15,6 +15,8 @@ app.get("/get-toDoList", ToDoListController.getToDoList)
 app.delete("/delete-toDoList/:id", ToDoListController.deleteList)
 app.get("/get-sorted-by-date-list", ToDoListController.getSortedByDateList)
 app.get("/get-sorted-alphabetically-list", ToDoListController.getSortedAlphabeticallyList)
+app.post("/add-progress", ToDoListController.addProgress)
+app.get("/get-progress", ToDoListController.getProgress)
 
 app.listen(5000, () => {
     console.log("Started...");

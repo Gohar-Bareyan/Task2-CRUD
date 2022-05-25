@@ -1,6 +1,6 @@
 import {
     SET_TO_DO_LIST_REQUEST, SET_TO_DO_LIST_SUCCESS, SET_TO_DO_LIST_ERROR, GET_TO_DO_LIST_REQUEST, DELETE_TO_DO_LIST,
-    UPDATE_TO_DO_LIST, SORT_BY_DATE, SORT_ALPHABETICALLY
+    UPDATE_TO_DO_LIST, SORT_BY_DATE, SORT_ALPHABETICALLY, SET_PROGRESS_REQUEST, GET_PROGRESS_REQUEST
 } from './Type';
 import { toDoListState } from './State';
 export const toDoListReducer = (state = toDoListState, action: any) => {
@@ -43,6 +43,16 @@ export const toDoListReducer = (state = toDoListState, action: any) => {
                 loading: true
             }
         case SORT_ALPHABETICALLY:
+            return {
+                ...state,
+                loading: true
+            }
+        case SET_PROGRESS_REQUEST:
+            return {
+                ...state,
+                loading: true
+            }
+        case GET_PROGRESS_REQUEST:
             return {
                 ...state,
                 loading: true

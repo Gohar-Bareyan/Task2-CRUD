@@ -1,8 +1,9 @@
 import React, { useEffect, useRef, useState } from 'react';
 import {
     Button, TextField, Autocomplete, ButtonGroup, ClickAwayListener, Grow, Paper, Popper,
-    MenuItem, MenuList, Box, Modal, MobileStepper
+    MenuItem, MenuList, Box, Modal, Typography
 } from '@mui/material';
+import LinearProgress, { LinearProgressProps } from '@mui/material/LinearProgress';
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 import { useForm, SubmitHandler } from 'react-hook-form';
 import * as Yup from 'yup';
@@ -13,9 +14,24 @@ import { Link } from "react-router-dom"
 
 import { ReactComponent as AdditionIcon } from "../../Images/addition.svg"
 import styles from "./index.module.scss"
-import { deleteToDoList, getToDoListRequest, setToDoListRequest, sortAlphabetically, sortByDate } from '../../Store/ToDoList/Action';
+import { deleteToDoList, getToDoListRequest, setToDoListRequest, sortAlphabetically, sortByDate, updateToDoList } from '../../Store/ToDoList/Action';
 import { RootState } from '../../Store/Root';
 import Header from '../Header';
+
+function LinearProgressWithLabel(props: LinearProgressProps & { value: number }) {
+    return (
+        <Box sx={{ display: 'flex', alignItems: 'center' }}>
+            <Box sx={{ width: '70%', mr: 1 }}>
+                <LinearProgress variant="determinate" {...props} />
+            </Box>
+            <Box sx={{ minWidth: 35 }}>
+                <Typography variant="body2" color="text.secondary">{`${Math.round(
+                    props.value,
+                )}%`}</Typography>
+            </Box>
+        </Box>
+    );
+}
 
 const options = ['Sort by date', 'Sort alphabetically'];
 
@@ -51,6 +67,8 @@ export const ToDoList = () => {
         description: Yup.string()
             .required('Description is required'),
     });
+
+   
 
     const { toDoList } = useSelector((state: RootState) => state.toDoList)
 
@@ -97,13 +115,27 @@ export const ToDoList = () => {
         setOpen(false);
     };
 
+    // Modal
     const [toggleModal, setToggleModal] = useState(false);
     const handleToggleModal = () => setToggleModal(!toggleModal);
+
+    const [openUpdate, setOpenUpdate] = useState(false);
+    const handleOpenUpdate = (id:number) => {
+        // console.log(id);
+        setOpenUpdate(true)
+        
+    };
+    const handleCloseUpdate = () => setOpenUpdate(false);
 
     const { register, reset, handleSubmit, formState: { errors } } = useForm<Inputs>({ resolver: yupResolver(validationSchema) });
     const onSubmit: SubmitHandler<Inputs> = (data) => {
         dispatch(setToDoListRequest({ data, toDoList }))
         reset()
+    }
+
+    const onUpdate: SubmitHandler<Inputs> = (data, listId) => {
+        console.log(listId);
+        dispatch(updateToDoList(data, listId))
     }
 
     const deleteList = (id: number) => {
@@ -129,13 +161,15 @@ export const ToDoList = () => {
         })
     }
 
-    const [activeStep, setActiveStep] = useState(0);
-
+    // Progress
+    const [progress, setProgress] = React.useState(0);
 
     return (
         <>
             <div className={styles.main}>
+                
                 <Header title={"To Do List"} />
+
                 <div className={styles.menu}>
                     <Button className={styles.add_button} onClick={handleToggleModal}><AdditionIcon className={styles.add_icon} />Add new task</Button>
                     <Autocomplete
@@ -246,20 +280,13 @@ export const ToDoList = () => {
                                     <tr key={list.id} >
                                         <td className={styles.title}><Link to={`/to-do-info/${list.id}`}>{list.title}</Link></td>
                                         <td><Link to={`/to-do-info/${list.id}`}>
-                                            <MobileStepper
-                                                className={styles.stepper}
-                                                variant="progress"
-                                                steps={6}
-                                                position="static"
-                                                activeStep={activeStep}
-                                                sx={{ maxWidth: 500, flexGrow: 1 }}
-                                                nextButton={""}
-                                                backButton={""}
-                                            />
+                                            <Box sx={{ width: '80%' }} className={styles.progress}>
+                                                <LinearProgressWithLabel value={list?.progress} />
+                                            </Box>
                                         </Link>
                                         </td>
                                         <td>
-                                            <Button className={styles.update_button} onClick={handleToggleModal}>Update</Button>
+                                            <Button className={styles.update_button} onClick={() => handleOpenUpdate(list.id)}>Update</Button>
                                             <Button className={styles.delete_button} onClick={() => deleteList(list.id)}>Delete</Button>
                                         </td>
                                     </tr>
@@ -270,20 +297,17 @@ export const ToDoList = () => {
                 </div>
 
 
-
-
-
-                {/* <Modal
-                    open={toggleModal}
-                    onClose={handleToggleModal}
-                    aria-labelledby="modal-modal-title"
-                    aria-describedby="modal-modal-description"
-                >
-                    <Box sx={style} className={styles.modal}>
-                        {toDoListArr && toDoListArr.map((list: any) => {
-                            return (
-                                <form onSubmit={handleSubmit(onSubmit)} key={list.id}>
-
+                {toDoListArr?.map((list: any) => {
+                    return (
+                        <Modal
+                        key={list.id}
+                            open={openUpdate}
+                            onClose={handleCloseUpdate}
+                            aria-labelledby="modal-modal-title"
+                            aria-describedby="modal-modal-description"
+                        >
+                            <Box  sx={style} className={styles.modal}>
+                                <form onSubmit={handleSubmit(data => onUpdate(data, list.id))}>
                                     <div className={styles.deadline_div}>
                                         <label htmlFor='deadline'>Deadline</label>
                                         <input type="date" id="deadline" className='form-control mt-2' {...register('deadline', { required: true })} />
@@ -301,15 +325,14 @@ export const ToDoList = () => {
                                     </div>
                                     <span>_________________________________________________________________________________</span>
                                     <div className={styles.close_create_buttons}>
-                                        <Button className={styles.add_task_close_button} onClick={handleToggleModal}>Close</Button>
+                                        <Button className={styles.add_task_close_button} onClick={handleCloseUpdate}>Close</Button>
                                         <Button className={styles.add_task_create_button} type='submit'>Update</Button>
                                     </div>
                                 </form>
-                            )
-                        })}
-
-                    </Box>
-                </Modal> */}
+                            </Box>
+                        </Modal>
+                    )
+                })}
             </div>
         </>
     )

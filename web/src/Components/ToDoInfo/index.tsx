@@ -1,80 +1,97 @@
 import { ReactComponent as BackIcon } from "../../Images/back.svg"
 import {
-    Button, MobileStepper
+    Button
 } from '@mui/material';
+import LinearProgress, { LinearProgressProps } from '@mui/material/LinearProgress';
+import Typography from '@mui/material/Typography';
+import Box from '@mui/material/Box';
 import styles from "./index.module.scss"
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Header from "../Header";
 import { useNavigate, useParams } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { RootState } from "../../Store/Root";
-import { deleteToDoList } from "../../Store/ToDoList/Action";
+import { deleteToDoList, getProgressRequest, getToDoListRequest, setProgressRequest } from "../../Store/ToDoList/Action";
 import { useDispatch } from "react-redux";
+
+function LinearProgressWithLabel(props: LinearProgressProps & { value: number }) {
+    return (
+        <Box sx={{ display: 'flex', alignItems: 'center' }}>
+            <Box sx={{ width: '70%', mr: 1 }}>
+                <LinearProgress variant="determinate" {...props} />
+            </Box>
+            <Box sx={{ minWidth: 35 }}>
+                <Typography variant="body2" color="white">{`${Math.round(
+                    props.value,
+                )}%`}</Typography>
+            </Box>
+        </Box>
+    );
+}
 
 
 const ToDoInfo = () => {
     const { id } = useParams()
     const { toDoList } = useSelector((state: RootState) => state.toDoList)
+    // console.log(toDoList);
 
-    const toDo = toDoList.find((toDo: any) => toDo.id === Number(id))
+    const toDo = toDoList?.find((toDo: any) => toDo.id === Number(id))
+    // console.log(toDo);
 
     const navigate = useNavigate()
     const dispatch = useDispatch()
-    // Percent
-    const [activeStep, setActiveStep] = useState(0);
-
-    const handleNext = () => {
-        setActiveStep((prevActiveStep) => prevActiveStep + 1);
+    // Progress
+    const handleInc = (id: number) => {
+        dispatch(setProgressRequest({ progress: toDo.progress + 10, toDoId: id, toDoList }))
+    };
+    const handleDec = (id: number) => {
+        dispatch(setProgressRequest({ progress: toDo.progress - 10, toDoId: id, toDoList }))
     };
 
-    const handleBack = () => {
-        setActiveStep((prevActiveStep) => prevActiveStep - 1);
-    };
+    useEffect(() => {
+        dispatch(getProgressRequest())
+    }, [toDo])
 
+    // GoBack
     const goBack = () => {
         navigate("/")
     }
-
+    // delete
     const deleteList = (id: number) => {
         dispatch(deleteToDoList(id, toDoList))
         navigate("/")
     }
+
+
     return (
         <div className={styles.container}>
             <Header title={"To Do Info"} />
             <div className={styles.to_do_info_main_div}>
                 <div className={styles.to_do_info_title}>
-                    <h3>{toDo.title}</h3>
+                    <h3>{toDo?.title}</h3>
                 </div>
                 <div className={styles.to_do_info}>
                     <div className={styles.description_div}>
-                        <p>{toDo.description}</p>
+                        <p>{toDo?.description}</p>
                     </div>
                     <div className={styles.info_actions}>
                         <div className={styles.percentage_div}>
-                            <MobileStepper
-                                className={styles.stepper}
-                                variant="progress"
-                                steps={6}
-                                position="static"
-                                activeStep={activeStep}
-                                sx={{ maxWidth: 500, flexGrow: 1 }}
-                                nextButton={
-                                    <Button size="small" onClick={handleNext} disabled={activeStep === 5} className={styles.plus_button}>+</Button>
-                                }
-                                backButton={
-                                    <Button size="small" onClick={handleBack} disabled={activeStep === 0} className={styles.minus_button}>-</Button>
-                                }
-                            />
+                            <Box sx={{ width: '80%' }} className={styles.progress}>
+                                <LinearProgressWithLabel value={toDo?.progress} />
+                                <div className={styles.inc_dec_buttons}>
+                                    <Button size="small" onClick={() => handleInc(toDo?.id)} className={styles.plus_button}>+</Button>
+                                    <Button size="small" onClick={() => handleDec(toDo?.id)} className={styles.minus_button}>-</Button>
+                                </div>
+                            </Box>
                         </div>
                         <div className={styles.deadline_div}>
-                            <p>Deadline  {toDo.deadline}</p>
+                            <p>Deadline  {toDo?.deadline}</p>
                         </div>
                         <div className={styles.createdAt_div}>
-                            <p>Created At  {toDo.createdAt}</p>
+                            <p>Created At  {toDo?.createdAt}</p>
                         </div>
                         <div className={styles.info_buttons}>
-                            <Button onClick={() => deleteList(toDo.id)} className={styles.info_delete_button}>Delete</Button>
+                            <Button onClick={() => deleteList(toDo?.id)} className={styles.info_delete_button}>Delete</Button>
                             <Button className={styles.info_update_button}>Update</Button>
                         </div>
                         <Button onClick={() => goBack()} className={styles.go_back_button}><BackIcon className={styles.back_icon} />Go Back</Button>

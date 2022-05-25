@@ -50,12 +50,15 @@
                 text-transform: capitalize;
             }
         }
-
-        .modal {
-            background-color: #c1c4cd !important;
-            display: grid;
-        }
     }
+    .modal {
+        background-color: #c1c4cd !important;
+        display: grid;
+    }
+}
+
+.modal {
+    overflow: auto;
 }
 
 .add_task_div,
@@ -122,14 +125,18 @@
         }
 
         tbody {
-
-            .stepper {
+            .progress {
                 background-color: transparent;
+                margin: auto;
 
                 span {
-                    height: 15px;
-                    border-radius: 7px;
-                    width: 60%;
+                    width: 305px;
+                    height: 20px;
+                    border-radius: 3px;
+                }
+
+                p {
+                    color: white;
                 }
             }
             tr {
@@ -180,3 +187,106 @@
     }
 }
 
+// Responsive 768 - 1200
+
+@media only screen and (max-width: 1200px) {
+    .modal {
+        width: 520px !important;
+
+        form {
+            width: 460px;
+        }
+    }
+
+    .table_div {
+        width: 94%;
+        margin-left: 20px;
+
+        table {
+            thead {
+                height: 50px;
+
+                tr {
+                    .progress_tr {
+                        display: none;
+                    }
+                }
+            }
+
+            tbody {
+                td:nth-child(2) {
+                    display: none;
+                }
+            }
+        }
+    }
+}
+
+//Responsive 460-768
+@media only screen and (max-width: 768px) {
+    .main {
+        width: 100%;
+        min-height: 800px;
+
+        .menu {
+            margin-top: 20px;
+            height: 150px;
+            display: block;
+
+            .add_button {
+                width: 94%;
+                display: flex;
+                justify-content: flex-start;
+                margin-left: 20px;
+            }
+
+            .autocomplete {
+                margin-left: 20px;
+                margin-top: 12px;
+                width: 94%;
+            }
+
+            .sort_button_group {
+                margin-left: 20px;
+                width: 94%;
+                margin-top: 12px;
+
+                button:nth-child(1) {
+                    width: 100%;
+                    display: flex;
+                    justify-content: flex-start;
+                }
+
+                button:nth-child(2) {
+                    border: none;
+                }
+
+                svg {
+                    fill: #757575;
+                }
+            }
+        }
+    }
+    .table_div {
+        width: 93%;
+        margin-left: 20px;
+
+        table {
+            thead {
+                height: 50px;
+
+                tr {
+                    .actions_tr {
+                        display: none;
+                    }
+                }
+            }
+
+            tbody {
+                td:nth-child(3) {
+                    display: none;
+                }
+            }
+        }
+    }
+}

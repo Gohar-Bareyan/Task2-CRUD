@@ -1,6 +1,6 @@
 import {
     SET_TO_DO_LIST_REQUEST, SET_TO_DO_LIST_SUCCESS, SET_TO_DO_LIST_ERROR, GET_TO_DO_LIST_REQUEST,
-    DELETE_TO_DO_LIST, UPDATE_TO_DO_LIST, SORT_BY_DATE, SORT_ALPHABETICALLY
+    DELETE_TO_DO_LIST, UPDATE_TO_DO_LIST, SORT_BY_DATE, SORT_ALPHABETICALLY, SET_PROGRESS_REQUEST, GET_PROGRESS_REQUEST
 } from './Type';
 
 export const setToDoListRequest = (data: object) => {
@@ -39,10 +39,13 @@ export const deleteToDoList: any = (data: number, toDoList: any) => {
     }
 }
 
-export const updateToDoList: any = (data: any) => {
+export const updateToDoList: any = (data: object, listId: number) => {
+    console.log(listId);
+    
     return {
         type: UPDATE_TO_DO_LIST,
-        payload: data
+        payload: data,
+        listId
     }
 }
 
@@ -58,4 +61,16 @@ export const sortAlphabetically = () => {
     }
 }
 
+export const setProgressRequest: any = (data: any) => {
+    return {
+        type: SET_PROGRESS_REQUEST,
+        payload: data
+    }
+}
+
+export const getProgressRequest = () => {
+    return {
+        type: GET_PROGRESS_REQUEST
+    }
+}
 

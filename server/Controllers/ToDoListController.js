@@ -1,5 +1,5 @@
 const { ToDoList } = require("../models");
-const moment = require ("moment")
+const moment = require("moment")
 
 class ToDoListController {
     static async addToDoList(req, res) {
@@ -34,6 +34,21 @@ class ToDoListController {
     static async getSortedAlphabeticallyList(req, res) {
         const sortedAlphabeticallyList = await ToDoList.findAll({ order: [['title', 'ASC']] })
         res.send(sortedAlphabeticallyList)
+    }
+
+    static async addProgress(req, res) {
+        const progress = req.body.data.progress
+        const toDoId = req.body.data.toDoId
+        const addedProgress = await ToDoList.upsert({
+            id: toDoId,
+            progress: progress
+        })
+        res.send(addedProgress[0])
+    }
+
+    static async getProgress(req, res) {
+        const newToDoList = await ToDoList.findAll({})
+        res.send(newToDoList)
     }
 }
 

@@ -4,6 +4,17 @@
     display: flex;
     align-items: center;
 
+   .switch {
+       margin-left: 84%;
+
+            span:nth-child(2) {
+           background-color: white;
+       
+       }
+
+      
+   }
+
     h1 {
         color: #c1c4cd;
         font-size: 23px;

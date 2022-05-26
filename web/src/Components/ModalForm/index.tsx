@@ -1,5 +1,5 @@
 import { Button, Box, Modal } from '@mui/material';
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useForm, SubmitHandler } from 'react-hook-form';
 
@@ -45,24 +45,25 @@ const ModalForm = (props: Props) => {
     const onSubmit: SubmitHandler<Inputs> = (data, id) => {
         if (props.type === 'create') {
             dispatch(setToDoListRequest({ data, toDoList }))
+            return props.handleToggleModal()
         } else if (props.type === 'update') {
-            const { updatableData: {id} } = props;
-            dispatch(updateToDoList({data, id}))
+            const { updatableData: { id } } = props;
+            dispatch(updateToDoList({ data, id }))
+            return props.handleToggleModal()
         }
         reset()
     }
 
-
     const renderActionButton = () => {
         if (props.type === 'create') {
-            return <Button className={styles.add_task_create_button} type="submit">Create</Button>
+            return <Button className={styles.add_task_create_button} type="submit">Create </Button>
         } else if (props.type === 'update') {
             return <Button className={styles.add_task_create_button} type="submit">Update</Button>
         }
     }
 
     useEffect(() => {
-        const { updatableData, type} = props;
+        const { updatableData, type } = props;
 
         if (updatableData?.hasOwnProperty('id') && type === 'update') {
             setValue("deadline", updatableData.deadline);
@@ -103,7 +104,6 @@ const ModalForm = (props: Props) => {
                 </form>
             </Box>
         </Modal>
-
     )
 }
 

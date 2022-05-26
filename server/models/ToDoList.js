@@ -13,7 +13,8 @@ module.exports = (sequelize, Sequelize) => {
             type: Sequelize.STRING
         },
         progress: {
-            type: Sequelize.INTEGER
+            type: Sequelize.INTEGER,
+            defaultValue: 0,
         }
     },
         {

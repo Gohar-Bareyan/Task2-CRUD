@@ -1,6 +1,6 @@
 .main {
     width: 100%;
-    background-color: #0e151b;
+    // background-color: #0e151b;
     min-height: 800px;
 
     .menu {
@@ -51,48 +51,7 @@
             }
         }
     }
-//     .modal {
-//         background-color: #c1c4cd !important;
-//         display: grid;
-//     }
 }
-
-// .modal {
-//     overflow: auto;
-// }
-
-// .add_task_div,
-// .description_div {
-//     margin-top: 20px !important;
-// }
-
-// .description_div {
-//     textarea {
-//         resize: none;
-//     }
-// }
-
-// .close_create_buttons {
-//     display: flex;
-//     justify-content: end;
-//     margin-left: 10px;
-//     margin-top: 10px;
-
-//     .add_task_close_button,
-//     .add_task_create_button {
-//         background-color: #dc3545 !important;
-//         color: white !important;
-//         text-transform: capitalize !important;
-//         font-size: 15px !important;
-//         width: 80px !important;
-//         border-radius: 6px;
-//     }
-
-//     .add_task_create_button {
-//         background-color: #198754 !important;
-//         margin-left: 12px;
-//     }
-// }
 
 .table_div {
     width: 96%;
@@ -128,6 +87,10 @@
             .progress {
                 background-color: transparent;
                 margin: auto;
+
+                div {
+                    width: 100%;
+                }
 
                 span {
                     width: 305px;
@@ -190,14 +153,6 @@
 // Responsive 768 - 1200
 
 @media only screen and (max-width: 1200px) {
-    // .modal {
-    //     width: 520px !important;
-
-    //     form {
-    //         width: 460px;
-    //     }
-    // }
-
     .table_div {
         width: 94%;
         margin-left: 20px;
@@ -290,3 +245,5 @@
         }
     }
 }
+
+

@@ -1,5 +1,5 @@
 import { ResponseGenerator } from './Interfaces/index';
-import { GET_TO_DO_LIST_REQUEST, SET_TO_DO_LIST_REQUEST, DELETE_TO_DO_LIST, SORT_BY_DATE, SORT_ALPHABETICALLY, SET_PROGRESS_REQUEST, GET_PROGRESS_REQUEST } from './ToDoList/Type';
+import { GET_TO_DO_LIST_REQUEST, SET_TO_DO_LIST_REQUEST, DELETE_TO_DO_LIST, SORT_BY_DATE, SORT_ALPHABETICALLY, SET_PROGRESS_REQUEST, GET_PROGRESS_REQUEST, UPDATE_TO_DO_LIST } from './ToDoList/Type';
 import { call, put, take, takeEvery } from "redux-saga/effects"
 import axios from "axios"
 import { setToDoListSuccess } from './ToDoList/Action';
@@ -20,6 +20,7 @@ function* watcherSaga() {
 	yield takeEvery(SORT_ALPHABETICALLY, getSortedAlphabeticallyList)
 	yield takeEvery(SET_PROGRESS_REQUEST, setProgressRequest)
 	yield takeEvery(GET_PROGRESS_REQUEST, getProgressRequest)
+	yield takeEvery(UPDATE_TO_DO_LIST, updateToDoList)
 }
 
 function* setToDoListRequest({ payload }: any) {
@@ -81,6 +82,15 @@ function* setProgressRequest({ payload }: any) {
 function* getProgressRequest() {
 	try {
 		const result: ResponseGenerator = yield Axios.get("http://localhost:5000/get-progress")
+		yield put(setToDoListSuccess(result.data))
+	} catch (e) {
+		console.error(e);
+	}
+}
+
+function* updateToDoList({ payload }: any) {
+	try {
+		const result: ResponseGenerator = yield Axios.put("http://localhost:5000/update-to-do", { data: payload })
 		yield put(setToDoListSuccess(result.data))
 	} catch (e) {
 		console.error(e);

@@ -41,7 +41,6 @@ export const deleteToDoList: any = (data: number, toDoList: any) => {
 
 export const updateToDoList: any = (data: object, listId: number) => {
     // console.log(data, listId);
-    
     return {
         type: UPDATE_TO_DO_LIST,
         payload: data,

@@ -50,6 +50,23 @@ class ToDoListController {
         const newToDoList = await ToDoList.findAll({})
         res.send(newToDoList)
     }
+
+    static async updateToDo(req, res) {
+        const createdDay = moment().format("YYYY-MM-DD");
+
+        const updatedToDo = await ToDoList.update({
+            deadline: req.body.data.data.deadline,
+            title: req.body.data.data.title,
+            description: req.body.data.data.description,
+            createdAt: createdDay,
+            progress: req.body.data.data.progress
+        },
+        {where: {id: req.body.data.id}})
+
+        const toDoList = await ToDoList.findAll({})
+        res.send(toDoList)
+
+    }
 }
 
 module.exports = { ToDoListController }

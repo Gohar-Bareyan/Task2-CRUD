@@ -11,8 +11,9 @@ import Header from "../Header";
 import { useNavigate, useParams } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { RootState } from "../../Store/Root";
-import { deleteToDoList, getProgressRequest, getToDoListRequest, setProgressRequest } from "../../Store/ToDoList/Action";
+import { deleteToDoList, getProgressRequest, setProgressRequest } from "../../Store/ToDoList/Action";
 import { useDispatch } from "react-redux";
+import ModalForm from "../ModalForm";
 
 function LinearProgressWithLabel(props: LinearProgressProps & { value: number }) {
     return (
@@ -29,28 +30,33 @@ function LinearProgressWithLabel(props: LinearProgressProps & { value: number })
     );
 }
 
-
 const ToDoInfo = () => {
     const { id } = useParams()
     const { toDoList } = useSelector((state: RootState) => state.toDoList)
-    // console.log(toDoList);
 
     const toDo = toDoList?.find((toDo: any) => toDo.id === Number(id))
-    // console.log(toDo);
 
     const navigate = useNavigate()
     const dispatch = useDispatch()
+
+    const [toggleUpdateModal, setToggleUpdateModal] = useState(false);
+    const handleToggleUpdateModal = () => setToggleUpdateModal(!toggleUpdateModal);
+
+    const [updatableData, setUpdateableData] = useState({})
+
     // Progress
     const handleInc = (id: number) => {
         dispatch(setProgressRequest({ progress: toDo.progress + 10, toDoId: id, toDoList }))
+        dispatch(getProgressRequest())
     };
     const handleDec = (id: number) => {
         dispatch(setProgressRequest({ progress: toDo.progress - 10, toDoId: id, toDoList }))
+        dispatch(getProgressRequest())
     };
 
     useEffect(() => {
         dispatch(getProgressRequest())
-    }, [toDo])
+    }, [])
 
     // GoBack
     const goBack = () => {
@@ -61,7 +67,6 @@ const ToDoInfo = () => {
         dispatch(deleteToDoList(id, toDoList))
         navigate("/")
     }
-
 
     return (
         <div className={styles.container}>
@@ -92,8 +97,12 @@ const ToDoInfo = () => {
                         </div>
                         <div className={styles.info_buttons}>
                             <Button onClick={() => deleteList(toDo?.id)} className={styles.info_delete_button}>Delete</Button>
-                            <Button className={styles.info_update_button}>Update</Button>
+                            <Button className={styles.info_update_button} onClick={() => {
+                                handleToggleUpdateModal();
+                                setUpdateableData({ ...toDo })
+                            }}>Update</Button>
                         </div>
+                        <ModalForm type="update" toggleModal={toggleUpdateModal} handleToggleModal={handleToggleUpdateModal} updatableData={updatableData} />
                         <Button onClick={() => goBack()} className={styles.go_back_button}><BackIcon className={styles.back_icon} />Go Back</Button>
                     </div>
                 </div>

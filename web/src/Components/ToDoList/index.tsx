@@ -1,24 +1,20 @@
 import React, { useEffect, useRef, useState } from 'react';
 import {
     Button, TextField, Autocomplete, ButtonGroup, ClickAwayListener, Grow, Paper, Popper,
-    MenuItem, MenuList, Box, Modal, Typography
+    MenuItem, MenuList, Box, Typography
 } from '@mui/material';
 import LinearProgress, { LinearProgressProps } from '@mui/material/LinearProgress';
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
-import { useForm, SubmitHandler } from 'react-hook-form';
-import * as Yup from 'yup';
-import { yupResolver } from '@hookform/resolvers/yup';
 import { useDispatch } from 'react-redux';
 import { useSelector } from 'react-redux';
 import { Link } from "react-router-dom"
 
 import { ReactComponent as AdditionIcon } from "../../Images/addition.svg"
 import styles from "./index.module.scss"
-import { deleteToDoList, getToDoListRequest, setToDoListRequest, sortAlphabetically, sortByDate, updateToDoList } from '../../Store/ToDoList/Action';
+import { deleteToDoList, getToDoListRequest, sortAlphabetically, sortByDate } from '../../Store/ToDoList/Action';
 import { RootState } from '../../Store/Root';
 import Header from '../Header';
 import ModalForm from '../ModalForm';
-
 
 function LinearProgressWithLabel(props: LinearProgressProps & { value: number }) {
     return (
@@ -34,29 +30,7 @@ function LinearProgressWithLabel(props: LinearProgressProps & { value: number })
         </Box>
     );
 }
-
 const options = ['Sort by date', 'Sort alphabetically'];
-
-//add new task - modal
-const style = {
-    position: 'absolute' as 'absolute',
-    top: '50%',
-    left: '50%',
-    transform: 'translate(-50%, -50%)',
-    width: 600,
-    height: 400,
-    bgcolor: '#C1C4CD ',
-    border: "none",
-    boxShadow: 24,
-    p: 4,
-    maxHeight: '90vh'
-};
-
-type Inputs = {
-    deadline: number,
-    title: string,
-    description: string,
-};
 
 export const ToDoList = () => {
     const { toDoList } = useSelector((state: RootState) => state.toDoList)
@@ -70,7 +44,6 @@ export const ToDoList = () => {
     const [open, setOpen] = useState(false);
     const anchorRef = useRef<HTMLDivElement>(null);
     const [selectedIndex, setSelectedIndex] = useState(1);
-    // console.log(selectedIndex === 0);
 
     const handleClick = () => {
         console.info(`You clicked ${options[selectedIndex]}`);
@@ -112,10 +85,12 @@ export const ToDoList = () => {
     const handleToggleUpdateModal = () => setToggleUpdateModal(!toggleUpdateModal);
 
     const [updatableData, setUpdateableData] = useState({})
+
     const deleteList = (id: number) => {
         dispatch(deleteToDoList(id, toDoList))
     }
 
+    // Search
     const [searchedCriteria, setSearchedCriteria] = useState('');
 
     const onInputChange = (e: any, value: any) => {
@@ -134,11 +109,12 @@ export const ToDoList = () => {
             return list.title.indexOf(searchedCriteria) > -1
         })
     }
+ 
 
     return (
         <>
             <div className={styles.main}>
-                
+
                 <Header title={"To Do List"} />
 
                 <div className={styles.menu}>
@@ -152,7 +128,7 @@ export const ToDoList = () => {
                         renderInput={(params) => <TextField className={styles.autocomplete_textfield} {...params} placeholder="Search ..." variant="outlined" />}
                     />
 
-                    <ModalForm type="create" toggleModal={toggleCreateModal} handleToggleModal={handleToggleCreateModal}/>
+                    <ModalForm type="create" toggleModal={toggleCreateModal} handleToggleModal={handleToggleCreateModal} />
 
                     <ButtonGroup ref={anchorRef} aria-label="split button" className={styles.sort_button_group}>
                         <Button onClick={handleClick} className={styles.sort_button}>{options[selectedIndex]}</Button>
@@ -201,6 +177,7 @@ export const ToDoList = () => {
                             </Grow>
                         )}
                     </Popper>
+                   
                 </div>
 
                 <div className={styles.table_div} id="table_div">
@@ -226,7 +203,7 @@ export const ToDoList = () => {
                                         <td>
                                             <Button className={styles.update_button} onClick={() => {
                                                 handleToggleUpdateModal();
-                                                setUpdateableData({...list})
+                                                setUpdateableData({ ...list })
                                             }}>Update</Button>
                                             <Button className={styles.delete_button} onClick={() => deleteList(list.id)}>Delete</Button>
                                         </td>

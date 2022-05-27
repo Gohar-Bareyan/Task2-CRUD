@@ -3,6 +3,7 @@ import {
     Button, TextField, Autocomplete, ButtonGroup, ClickAwayListener, Grow, Paper, Popper,
     MenuItem, MenuList, Box, Typography
 } from '@mui/material';
+
 import LinearProgress, { LinearProgressProps } from '@mui/material/LinearProgress';
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 import { useDispatch } from 'react-redux';
@@ -15,6 +16,7 @@ import { deleteToDoList, getToDoListRequest, sortAlphabetically, sortByDate } fr
 import { RootState } from '../../Store/Root';
 import Header from '../Header';
 import ModalForm from '../ModalForm';
+import StepperForm from '../StepperForm';
 
 function LinearProgressWithLabel(props: LinearProgressProps & { value: number }) {
     return (
@@ -34,6 +36,7 @@ const options = ['Sort by date', 'Sort alphabetically'];
 
 export const ToDoList = () => {
     const { toDoList } = useSelector((state: RootState) => state.toDoList)
+    
 
     const dispatch = useDispatch()
 
@@ -73,7 +76,6 @@ export const ToDoList = () => {
         ) {
             return;
         }
-
         setOpen(false);
     };
 
@@ -109,11 +111,12 @@ export const ToDoList = () => {
             return list.title.indexOf(searchedCriteria) > -1
         })
     }
- 
 
+// drag and drop
     return (
         <>
             <div className={styles.main}>
+                <StepperForm />
 
                 <Header title={"To Do List"} />
 
@@ -177,7 +180,7 @@ export const ToDoList = () => {
                             </Grow>
                         )}
                     </Popper>
-                   
+
                 </div>
 
                 <div className={styles.table_div} id="table_div">

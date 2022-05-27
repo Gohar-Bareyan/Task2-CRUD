@@ -1,0 +1,42 @@
+.box {
+    margin: auto;
+    margin-top: 10px;
+    background-color: #cccccc !important;
+    border-radius: 8px;
+    border: none;
+    min-height: 450px;
+
+    .paper {
+        background-color: #cccccc !important;
+    }
+
+    .label {
+        padding-left: 60px;
+        font-weight: bold;
+        font-size: 18px;
+        color: #333333 !important;
+    }
+
+    .image_list_item {
+        margin-top: 20px;
+    }
+
+    .finish_link {
+        text-decoration: none;
+    }
+
+    .completed_paper {
+        background-color: #2e7d32;
+
+        p,
+        button,
+        a {
+            color: white;
+        }
+
+        button:hover,
+        a:hover {
+            color: blue;
+        }
+    }
+}

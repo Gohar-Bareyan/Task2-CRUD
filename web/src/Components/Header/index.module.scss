@@ -4,16 +4,13 @@
     display: flex;
     align-items: center;
 
-   .switch {
-       margin-left: 84%;
+    .switch {
+        margin-left: 84%;
 
-            span:nth-child(2) {
-           background-color: white;
-       
-       }
-
-      
-   }
+        span:nth-child(2) {
+            background-color: white;
+        }
+    }
 
     h1 {
         color: #c1c4cd;
@@ -26,9 +23,26 @@
 
 @media only screen and (max-width: 1200px) {
     .header {
+        .switch {
+            margin-left: 72%;
+        }
+
         h1 {
             font-size: 20px;
-            margin-top: 15px;
+        }
+    }
+}
+
+// Responsive 480 - 768
+
+@media only screen and (max-width: 768px) {
+    .header {
+        .switch {
+            margin-left: 60%;
+        }
+
+        h1 {
+            font-size: 20px;
         }
     }
 }

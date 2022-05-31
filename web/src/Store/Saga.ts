@@ -1,6 +1,6 @@
 import { ResponseGenerator } from './Interfaces/index';
 import { GET_TO_DO_LIST_REQUEST, SET_TO_DO_LIST_REQUEST, DELETE_TO_DO_LIST, SORT_BY_DATE, SORT_ALPHABETICALLY, SET_PROGRESS_REQUEST, GET_PROGRESS_REQUEST, UPDATE_TO_DO_LIST, REORDER_BY_DRAG_AND_DROP } from './ToDoList/Type';
-import { call, put, take, takeEvery } from "redux-saga/effects"
+import { call, put, takeEvery } from "redux-saga/effects"
 import axios from "axios"
 import { setToDoListSuccess } from './ToDoList/Action';
 
@@ -99,9 +99,9 @@ function* updateToDoList({ payload }: any) {
 }
 
 function* reOrderByDnD({ payload }: any) {
-	console.log(payload);
+	// console.log(payload);
 	try {
-		const result: ResponseGenerator = yield Axios.put("http://localhost:5000/reOrder-to-do", { data: payload })
+		const result: ResponseGenerator = yield Axios.put("http://localhost:5000/re-order-to-do", { data: payload })
 	} catch (e) {
 		console.error(e);
 	}

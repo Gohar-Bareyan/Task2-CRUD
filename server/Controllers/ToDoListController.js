@@ -1,5 +1,6 @@
 const { ToDoList } = require("../models");
 const moment = require("moment")
+const { sequelize } = require("../models");
 
 class ToDoListController {
     static async addToDoList(req, res) {
@@ -75,21 +76,16 @@ class ToDoListController {
     }
 
     static async reOrderToDo(req, res) {
-        const destinationIndex = req.body.data.destinationIndex
-        const sourceIndex = req.body.data.sourceIndex
-        // const draggableTodos = req.body.data.draggableTodos
-       
-        // await draggableTodos.map(async (toDo) => {
-        //     return (
-                await ToDoList.update({
-                    orderId: destinationIndex
-                },
-                    { where: { orderId: sourceIndex } }
-                )
-        //     )
-        // })
+        var promises = req.body.data.map(function (toDo, index) {
+            return ToDoList.update({
+                orderId: index
+            },
+                { where: { id: toDo.id } }
+            )
+        });
+        await Promise.all(promises)
+        res.send("Ok")
     }
-
 }
 
 module.exports = { ToDoListController }

@@ -8,7 +8,7 @@ interface Props {
 }
 
 export default function (props: Props) {
-    const [checked, setChecked] = useState(JSON.parse(localStorage.getItem('isDarkMode') || ''));
+    const [checked, setChecked] = useState(JSON.parse(localStorage.getItem('isDarkMode') || 'null'));
 
     const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         setChecked(event.target.checked);

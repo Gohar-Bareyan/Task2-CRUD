@@ -19,7 +19,7 @@ import { RootState } from '../../Store/Root';
 import Header from '../Header';
 import ModalForm from '../ModalForm';
 import StepperForm from '../StepperForm';
-import { padding } from '@mui/system';
+import ButtonForm from '../ButtonForm';
 
 function LinearProgressWithLabel(props: LinearProgressProps & { value: number }) {
     return (
@@ -133,15 +133,14 @@ export const ToDoList = () => {
 
     const onDragEnd = (result: DropResult) => {
         const { source, destination } = result
-        // console.log(destination);
+        console.log(destination);
         if (!destination) return
         const items = Array.from(draggableTodos)
         const [newOrder] = items.splice(source.index, 1)
         items.splice(destination.index, 0, newOrder)
         setDraggableTodos(items)
-        dispatch(reOrderByDragAndDrop({draggableTodos: draggableTodos, destinationIndex: destination.index, sourceIndex: source.index}))
+        dispatch(reOrderByDragAndDrop(items))
     }
-
 
     return (
         <>
@@ -150,6 +149,21 @@ export const ToDoList = () => {
                 <StepperForm />
 
                 <Header title={"To Do List"} />
+
+                {/* <ButtonForm
+                    backgroundColor="yellow"
+                    color="red"
+                    border='3px solid red'
+                    outline="dashed yellow"
+                    fontSize="18px"
+                    icon={<AdditionIcon
+                        width={22}
+                        fill={'red'}
+                    />}
+                >
+                    Add
+                </ButtonForm> */}
+
 
                 <div className={styles.menu}>
                     <Button className={styles.add_button} onClick={handleToggleCreateModal}><AdditionIcon className={styles.add_icon} />Add new task</Button>
@@ -252,7 +266,6 @@ export const ToDoList = () => {
                                                         </tr>
                                                     )}
                                                 </Draggable>
-
                                             )
                                         })}
                                     </tbody>

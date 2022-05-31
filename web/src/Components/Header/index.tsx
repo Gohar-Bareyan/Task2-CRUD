@@ -8,11 +8,11 @@ interface Props {
 }
 
 export default function (props: Props) {
-    const [checked, setChecked] = useState(false);
+    const [checked, setChecked] = useState(JSON.parse(localStorage.getItem('isDarkMode') || ''));
 
     const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         setChecked(event.target.checked);
-       
+        
         localStorage.setItem("isDarkMode", JSON.stringify(!checked))
     };
 
@@ -22,6 +22,7 @@ export default function (props: Props) {
         } else {
             document.body.style.backgroundColor = "white"
         }
+
         const data = localStorage.getItem('isDarkMode');
         if ( data !== null ) setChecked(JSON.parse(data));
       }, [checked]);

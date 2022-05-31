@@ -15,6 +15,9 @@ module.exports = (sequelize, Sequelize) => {
         progress: {
             type: Sequelize.INTEGER,
             defaultValue: 0,
+        },
+        orderId: {
+            type: Sequelize.INTEGER
         }
     },
         {

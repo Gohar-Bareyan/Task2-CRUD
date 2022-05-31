@@ -18,6 +18,7 @@ app.get("/get-sorted-alphabetically-list", ToDoListController.getSortedAlphabeti
 app.post("/add-progress", ToDoListController.addProgress)
 app.get("/get-progress", ToDoListController.getProgress)
 app.put("/update-to-do", ToDoListController.updateToDo)
+app.put("/reOrder-to-do", ToDoListController.reOrderToDo)
 
 app.listen(5000, () => {
     console.log("Started...");

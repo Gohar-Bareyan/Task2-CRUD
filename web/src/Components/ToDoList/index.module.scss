@@ -104,12 +104,13 @@
             }
             tr {
                 cursor: pointer;
+                background-color: #2e323e;
                 color: white;
-                height: 60px;
-
-                div {
-                    display: flex;
-                }
+                height: 50px;
+                min-height: 50px;
+                // div {
+                //     display: flex;
+                // }
 
                 .title {
                     padding-left: 15px;
@@ -120,7 +121,7 @@
                         width: 100%;
                         display: flex;
                         align-items: center;
-                        height: 60px;
+                        // height: 60px;
                     }
                 }
 
@@ -138,9 +139,19 @@
                     margin-left: 15px;
                 }
                 td {
-                    width: 100%;
-                    background-color: #2e323e;
+                    // width: 100%;
 
+                    &:first-child {
+                        width: 35% !important;
+                    }
+
+                    &:nth-child(2) {
+                        width: 35% !important;
+                    }
+
+                    &:last-child {
+                        width: 30% !important;
+                    }
                     &:hover {
                         background-color: #21232c;
                     }

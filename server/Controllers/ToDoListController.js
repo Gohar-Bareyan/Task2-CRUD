@@ -9,13 +9,20 @@ class ToDoListController {
             deadline: req.body.data.deadline,
             title: req.body.data.title,
             description: req.body.data.description,
-            createdAt: createdDay
+            createdAt: createdDay,
+            orderId: req.body.toDoList.length
         })
         res.send(newToDoList)
     }
 
     static async getToDoList(req, res) {
-        const allToDoList = await ToDoList.findAll()
+        const allToDoList = await ToDoList.findAll(
+            {
+                order: [
+                    ['orderId', 'ASC']
+                ]
+            }
+        )
         res.send(allToDoList)
     }
 
@@ -54,19 +61,35 @@ class ToDoListController {
     static async updateToDo(req, res) {
         const createdDay = moment().format("YYYY-MM-DD");
 
-        const updatedToDo = await ToDoList.update({
+        await ToDoList.update({
             deadline: req.body.data.data.deadline,
             title: req.body.data.data.title,
             description: req.body.data.data.description,
             createdAt: createdDay,
             progress: req.body.data.data.progress
         },
-        {where: {id: req.body.data.id}})
+            { where: { id: req.body.data.id } })
 
         const toDoList = await ToDoList.findAll({})
         res.send(toDoList)
-
     }
+
+    static async reOrderToDo(req, res) {
+        const destinationIndex = req.body.data.destinationIndex
+        const sourceIndex = req.body.data.sourceIndex
+        // const draggableTodos = req.body.data.draggableTodos
+       
+        // await draggableTodos.map(async (toDo) => {
+        //     return (
+                await ToDoList.update({
+                    orderId: destinationIndex
+                },
+                    { where: { orderId: sourceIndex } }
+                )
+        //     )
+        // })
+    }
+
 }
 
 module.exports = { ToDoListController }

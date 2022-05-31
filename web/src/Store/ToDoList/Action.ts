@@ -1,6 +1,6 @@
 import {
     SET_TO_DO_LIST_REQUEST, SET_TO_DO_LIST_SUCCESS, SET_TO_DO_LIST_ERROR, GET_TO_DO_LIST_REQUEST,
-    DELETE_TO_DO_LIST, UPDATE_TO_DO_LIST, SORT_BY_DATE, SORT_ALPHABETICALLY, SET_PROGRESS_REQUEST, GET_PROGRESS_REQUEST
+    DELETE_TO_DO_LIST, UPDATE_TO_DO_LIST, SORT_BY_DATE, SORT_ALPHABETICALLY, SET_PROGRESS_REQUEST, GET_PROGRESS_REQUEST, REORDER_BY_DRAG_AND_DROP
 } from './Type';
 
 export const setToDoListRequest = (data: object) => {
@@ -70,6 +70,15 @@ export const setProgressRequest: any = (data: any) => {
 export const getProgressRequest = () => {
     return {
         type: GET_PROGRESS_REQUEST
+    }
+}
+
+export const reOrderByDragAndDrop = (data: any) => {
+    // console.log(data);
+    
+    return {
+        type: REORDER_BY_DRAG_AND_DROP,
+        payload: data
     }
 }
 

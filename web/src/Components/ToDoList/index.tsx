@@ -9,14 +9,17 @@ import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 import { useDispatch } from 'react-redux';
 import { useSelector } from 'react-redux';
 import { Link } from "react-router-dom"
+import { DragDropContext, Draggable, DraggableId, Droppable, DropResult } from 'react-beautiful-dnd';
+
 
 import { ReactComponent as AdditionIcon } from "../../Images/addition.svg"
 import styles from "./index.module.scss"
-import { deleteToDoList, getToDoListRequest, sortAlphabetically, sortByDate } from '../../Store/ToDoList/Action';
+import { deleteToDoList, getToDoListRequest, reOrderByDragAndDrop, sortAlphabetically, sortByDate } from '../../Store/ToDoList/Action';
 import { RootState } from '../../Store/Root';
 import Header from '../Header';
 import ModalForm from '../ModalForm';
 import StepperForm from '../StepperForm';
+import { padding } from '@mui/system';
 
 function LinearProgressWithLabel(props: LinearProgressProps & { value: number }) {
     return (
@@ -34,15 +37,28 @@ function LinearProgressWithLabel(props: LinearProgressProps & { value: number })
 }
 const options = ['Sort by date', 'Sort alphabetically'];
 
+// drag and drop
+const getItemStyle = (isDragging: boolean, draggableStyle: any) => ({
+    boxShadow: isDragging ? "1px 1px 10px 0px green, inset 1px 1px 10px 0px green, 1px 1px 10px 0px green" : "none",
+    ...draggableStyle
+})
+
+
 export const ToDoList = () => {
     const { toDoList } = useSelector((state: RootState) => state.toDoList)
-    
+    const [draggableTodos, setDraggableTodos] = useState([])
+
+    // console.log(toDoList);
 
     const dispatch = useDispatch()
 
     useEffect(() => {
         dispatch(getToDoListRequest())
     }, [])
+
+    useEffect(() => {
+        setDraggableTodos(toDoList)
+    }, [toDoList])
 
     const [open, setOpen] = useState(false);
     const anchorRef = useRef<HTMLDivElement>(null);
@@ -112,10 +128,25 @@ export const ToDoList = () => {
         })
     }
 
-// drag and drop
+    // drag and drop
+    // console.log(draggableTodos);
+
+    const onDragEnd = (result: DropResult) => {
+        const { source, destination } = result
+        // console.log(destination);
+        if (!destination) return
+        const items = Array.from(draggableTodos)
+        const [newOrder] = items.splice(source.index, 1)
+        items.splice(destination.index, 0, newOrder)
+        setDraggableTodos(items)
+        dispatch(reOrderByDragAndDrop({draggableTodos: draggableTodos, destinationIndex: destination.index, sourceIndex: source.index}))
+    }
+
+
     return (
         <>
             <div className={styles.main}>
+
                 <StepperForm />
 
                 <Header title={"To Do List"} />
@@ -192,28 +223,42 @@ export const ToDoList = () => {
                                 <th className={styles.actions_tr}>Actions</th>
                             </tr>
                         </thead>
-                        <tbody>
-                            {toDoListArr?.map((list: any) => {
-                                return (
-                                    <tr key={list.id} >
-                                        <td className={styles.title}><Link to={`/to-do-info/${list.id}`}>{list.title}</Link></td>
-                                        <td><Link to={`/to-do-info/${list.id}`}>
-                                            <Box sx={{ width: '80%' }} className={styles.progress}>
-                                                <LinearProgressWithLabel value={list?.progress} />
-                                            </Box>
-                                        </Link>
-                                        </td>
-                                        <td>
-                                            <Button className={styles.update_button} onClick={() => {
-                                                handleToggleUpdateModal();
-                                                setUpdateableData({ ...list })
-                                            }}>Update</Button>
-                                            <Button className={styles.delete_button} onClick={() => deleteList(list.id)}>Delete</Button>
-                                        </td>
-                                    </tr>
-                                )
-                            })}
-                        </tbody>
+                        <DragDropContext onDragEnd={onDragEnd}>
+                            <Droppable droppableId="draggableTodos">
+                                {(provided) => (
+                                    <tbody {...provided.droppableProps} ref={provided.innerRef}>
+                                        {draggableTodos.length > 0 && draggableTodos.map((list: any, index: any) => {
+                                            return (
+                                                <Draggable key={list.id} draggableId={`${list.id}`} index={index}>
+                                                    {(provided, snapshot) => (
+                                                        <tr ref={provided.innerRef}
+                                                            {...provided.draggableProps}
+                                                            {...provided.dragHandleProps}
+                                                            style={getItemStyle(snapshot.isDragging, provided.draggableProps.style)}>
+                                                            <td className={styles.title}><Link to={`/to-do-info/${list.id}`}>{list.title}</Link></td>
+                                                            <td><Link to={`/to-do-info/${list.id}`}>
+                                                                <Box sx={{ width: '100%' }} className={styles.progress}>
+                                                                    <LinearProgressWithLabel value={list?.progress} />
+                                                                </Box>
+                                                            </Link>
+                                                            </td>
+                                                            <td>
+                                                                <Button className={styles.update_button} onClick={() => {
+                                                                    handleToggleUpdateModal();
+                                                                    setUpdateableData({ ...list })
+                                                                }}>Update</Button>
+                                                                <Button className={styles.delete_button} onClick={() => deleteList(list.id)}>Delete</Button>
+                                                            </td>
+                                                        </tr>
+                                                    )}
+                                                </Draggable>
+
+                                            )
+                                        })}
+                                    </tbody>
+                                )}
+                            </Droppable>
+                        </DragDropContext>
                     </table>
                 </div>
 
